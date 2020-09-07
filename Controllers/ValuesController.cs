@@ -7,6 +7,8 @@ using System.Web.Http;
 using System.Web;
 
 using GrapeCity.ActiveReports;
+using GrapeCity.ActiveReports.Document;
+
 using Microsoft.VisualBasic.Logging;
 using System.Web.Http.ExceptionHandling;
 
@@ -23,20 +25,21 @@ namespace WebAPITest.Controllers
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public string Get(string id)
         {
             var fileName = "BarCode.rdlx";
             try
             {
-                
-
-
+                //GrapeCity.ActiveReports.Viewer.Win.Viewer arvMain = new GrapeCity.ActiveReports.Viewer.Win.Viewer();
 
                 var reportFile = new FileInfo(HttpContext.Current.Server.MapPath("~/") + fileName);
 
                 PageReport report = new PageReport(reportFile);
 
-                var doc = new GrapeCity.ActiveReports.Document.PageDocument(report);
+                var doc = new PageDocument(report);
+
+
+                doc.Parameters["ReportParameter1"].CurrentValue = id;
 
                 doc.Print(false, false, false);
 
@@ -50,6 +53,19 @@ namespace WebAPITest.Controllers
             }
 
         }
+
+        // 実行時にLocateDataSourceイベントと共に、データセットプロバイダを使用し、アンバウンドデータソースと接続できます。LocateDataSourceイベントがデータの入力が必要な場合は、レポートエンジンにより発生されます。
+        void OnLocateDataSource(object sender, LocateDataSourceEventArgs args)
+        {
+            //args.Data = LoadData();
+            var a = args;
+
+
+
+
+        }
+
+
 
         // POST api/values
         public void Post([FromBody] string value)
